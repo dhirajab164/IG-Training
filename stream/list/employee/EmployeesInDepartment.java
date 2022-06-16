@@ -10,6 +10,7 @@ public class EmployeesInDepartment {
 	}
 
 	private static void getCountOfEmployeesInDepartment(String dept) {
+		System.out.println("Male and Female Employees of Department: " + dept);
 		Map<String, Long> collect = Seeder.getEmployees().stream().filter(e -> e.getDepartment() == dept)
 				.collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));
 		collect.entrySet().stream().forEach(e -> System.out.println(e.getKey() + " = " + e.getValue()));
