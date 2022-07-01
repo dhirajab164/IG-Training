@@ -1,0 +1,7 @@
+2022-07-01 12:04:09.989  INFO 27684 --- [main] .a.SpringBootLoggingDemoApplicationTests : Starting SpringBootLoggingDemoApplicationTests using Java 17.0.3 on HelloWorld with PID 27684 (started by Dhiraj in F:\Java\Training\SpringBoot\spring_boot\SpringBootLoggingDemo)
+2022-07-01 12:04:09.992  INFO 27684 --- [main] .a.SpringBootLoggingDemoApplicationTests : No active profile set, falling back to 1 default profile: "default"
+2022-07-01 12:04:10.819  INFO 27684 --- [main] ication$$EnhancerBySpringCGLIB$$e58ca4ac : init
+2022-07-01 12:04:10.819  INFO 27684 --- [main] ication$$EnhancerBySpringCGLIB$$e58ca4ac : INFO
+2022-07-01 12:04:10.819 ERROR 27684 --- [main] ication$$EnhancerBySpringCGLIB$$e58ca4ac : ERROR
+2022-07-01 12:04:10.819  WARN 27684 --- [main] ication$$EnhancerBySpringCGLIB$$e58ca4ac : WARN
+2022-07-01 12:04:11.776  INFO 27684 --- [main] .a.SpringBootLoggingDemoApplicationTests : Started SpringBootLoggingDemoApplicationTests in 2.207 seconds (JVM running for 6.634)
