@@ -52,7 +52,7 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public List<User> getAllUsersByType(int type) {
-		List<User> users = userRepository.findUsersByUserType(type);
+		List<User> users = userRepository.findUsersByType(type);
 		if (!users.isEmpty()) {
 			return users;
 		} else {
