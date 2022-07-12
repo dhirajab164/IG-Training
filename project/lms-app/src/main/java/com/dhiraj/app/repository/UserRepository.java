@@ -11,6 +11,6 @@ import com.dhiraj.app.entity.enums.UserType;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	List<User> findUsersByUserType(int type);
+	List<User> findUsersByType(UserType type);
 
 }
