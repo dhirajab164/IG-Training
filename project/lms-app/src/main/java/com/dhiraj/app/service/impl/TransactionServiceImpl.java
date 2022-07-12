@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
 import com.dhiraj.app.entity.Transaction;
 import com.dhiraj.app.entity.enums.Active;
 import com.dhiraj.app.exception.BusinessException;
 import com.dhiraj.app.repository.TransactionRepository;
 import com.dhiraj.app.service.ITransactionService;
 
+@Service
 public class TransactionServiceImpl implements ITransactionService {
 
 	private TransactionRepository transactionRepository;
