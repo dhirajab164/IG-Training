@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.dhiraj.app.entity.Book;
@@ -12,6 +14,7 @@ import com.dhiraj.app.exception.BusinessException;
 import com.dhiraj.app.repository.BookRepository;
 import com.dhiraj.app.service.IBookService;
 
+@Transactional
 @Service
 public class BookServiceImpl implements IBookService {
 
@@ -23,12 +26,12 @@ public class BookServiceImpl implements IBookService {
 	}
 
 	@Override
-	public Book createBook(Optional<Book> book) {
-		if (book.isPresent()) {
-			return bookRepository.save(book.get());
-		} else {
-			throw new BusinessException("Book is Empty.");
-		}
+	public Book createBook(Book book) {
+		Book savedBook = bookRepository.save(book);
+		if (savedBook != null)
+			return savedBook;
+		else
+			throw new BusinessException("Error creating new Book.");
 	}
 
 	@Override
@@ -45,7 +48,7 @@ public class BookServiceImpl implements IBookService {
 		if (!books.isEmpty()) {
 			return books;
 		} else {
-			throw new BusinessException("Books not Found. List is Empty.");
+			throw new BusinessException("Book not Found. List is Empty.");
 		}
 	}
 
@@ -55,7 +58,7 @@ public class BookServiceImpl implements IBookService {
 		if (!books.isEmpty()) {
 			return books;
 		} else {
-			throw new BusinessException("Books not Found for Active: " + active + ". List is Empty.");
+			throw new BusinessException("Book not Found for Active: " + active + ". List is Empty.");
 		}
 	}
 
@@ -65,7 +68,7 @@ public class BookServiceImpl implements IBookService {
 		if (!books.isEmpty()) {
 			return books.stream().filter(b -> b.getActive() == Active.TRUE).collect(Collectors.toList());
 		} else {
-			throw new BusinessException("Books not Found for Author: " + author + ". List is Empty.");
+			throw new BusinessException("Book not Found for Author: " + author + ". List is Empty.");
 		}
 	}
 
@@ -75,7 +78,7 @@ public class BookServiceImpl implements IBookService {
 		if (!books.isEmpty()) {
 			return books.stream().filter(b -> b.getActive() == Active.TRUE).collect(Collectors.toList());
 		} else {
-			throw new BusinessException("Books not Found for Publication: " + publication + ". List is Empty.");
+			throw new BusinessException("Book not Found for Publication: " + publication + ". List is Empty.");
 		}
 	}
 
@@ -85,30 +88,23 @@ public class BookServiceImpl implements IBookService {
 		if (!books.isEmpty()) {
 			return books.stream().filter(b -> b.getActive() == Active.TRUE).collect(Collectors.toList());
 		} else {
-			throw new BusinessException("Books not Found for Title: " + title + ". List is Empty.");
+			throw new BusinessException("Book not Found for Title: " + title + ". List is Empty.");
 		}
 	}
 
 	@Override
-	public Book updateBook(long id, Optional<Book> book) {
-		Optional<Book> optional = bookRepository.findById(id);
-		Book toUpdate = null;
-		if (optional.isPresent() && book.isPresent()) {
-			toUpdate = optional.get();
-			toUpdate.setAuthor(book.get().getAuthor());
-			toUpdate.setPublication(book.get().getPublication());
-			toUpdate.setPages(book.get().getPages());
-			toUpdate.setPrice(book.get().getPrice());
-			toUpdate.setCopies(book.get().getCopies());
-			toUpdate.setActive(book.get().getActive());
-			toUpdate.setCreatedBy(book.get().getCreatedBy());
-			toUpdate.setUpdatedBy(book.get().getUpdatedBy());
-			toUpdate.setCreatedOn(book.get().getCreatedOn());
-			toUpdate.setUpdatedOn(book.get().getUpdatedOn());
-			createBook(Optional.of(toUpdate));
-		} else {
-			optional.orElseThrow(() -> new BusinessException("Book Not Found."));
-		}
+	public Book updateBook(long id, Book book) {
+
+		Book toUpdate = getBookById(id);
+
+		toUpdate.setTitle(book.getTitle());
+		toUpdate.setAuthor(book.getAuthor());
+		toUpdate.setPublication(book.getPublication());
+		toUpdate.setPages(book.getPages());
+		toUpdate.setPrice(book.getPrice());
+		toUpdate.setCopies(book.getCopies());
+		toUpdate.setActive(book.getActive());
+
 		return toUpdate;
 	}
 
@@ -117,7 +113,7 @@ public class BookServiceImpl implements IBookService {
 		Optional<Book> optional = bookRepository.findById(id);
 		if (optional.isPresent()) {
 			optional.get().setActive(Active.FALSE);
-			updateBook(id, optional);
+			updateBook(id, optional.get());
 		} else
 			optional.orElseThrow(() -> new BusinessException("Book Not Found."));
 	}
