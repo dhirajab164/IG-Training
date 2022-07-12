@@ -52,7 +52,7 @@ public class UserRepositoryTest {
 	@DisplayName("Test for user by type")
 	@Test
 	public void findUserByTypeTest() {
-		List<User> userByTitle = userRepository.findUsersByType(UserType.C.ordinal());
+		List<User> userByTitle = userRepository.findUsersByType(UserType.C);
 		for (User user : userByTitle) {
 			assertThat(user.getType()).isEqualTo(UserType.C);
 		}
@@ -77,6 +77,5 @@ public class UserRepositoryTest {
 
 		assertEquals(firstName, savedUser.getFirstName());
 	}
-	
 
 }
