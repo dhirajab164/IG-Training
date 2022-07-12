@@ -42,7 +42,6 @@ public class BookServiceTests {
 				.updatedOn(LocalDate.now()).build();
 	}
 
-	
 	@DisplayName("Test to get all books ")
 	@Test
 	public void getAllBooksTest() {
@@ -115,7 +114,18 @@ public class BookServiceTests {
 		Book newBook = bookService.createBook(b);
 		assertEquals(1, newBook.getId());
 	}
-	
-	
 
+	@DisplayName("Test to update book")
+	@Test
+	public void updateBookTest() {
+		bookRepository.save(book);
+		String title = "Title Updated";
+
+		when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
+		book.setTitle(title);
+
+		Book updatedBook = bookService.updateBook(book.getId(), book);
+		assertThat(updatedBook.getTitle()).isEqualTo(title);
+
+	}
 }
