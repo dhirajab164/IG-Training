@@ -1,5 +1,6 @@
 package com.dhiraj.app.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -80,6 +81,20 @@ public class UserServiceTest {
 
 		User newUser = userService.createUser(user);
 		assertEquals(1, newUser.getId());
+	}
+
+	@DisplayName("Test to user update")
+	@Test
+	public void updateUserTest() {
+		userRepository.save(user);
+		String firstName = "John";
+
+		when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+		user.setFirstName(firstName);
+
+		User updatedUser = userService.updateUser(user.getId(), user);
+		assertThat(updatedUser.getFirstName()).isEqualTo(firstName);
+
 	}
 
 }
