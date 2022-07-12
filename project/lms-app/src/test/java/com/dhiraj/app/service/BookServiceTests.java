@@ -1,7 +1,7 @@
 package com.dhiraj.app.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,33 +37,25 @@ public class BookServiceTests {
 
 	@BeforeEach
 	private void init() {
-		book = new Book(1, "Title 1", "Author 1", "Publication 1", 120, 150.0, 50, Active.TRUE, user, LocalDate.now(),
-				user, LocalDate.now());
+		book = Book.builder().id(1l).title("Title 1").author("Author 1").publication("Publication 1").pages(120)
+				.price(150.0).copies(100).active(Active.TRUE).createdBy(user).createdOn(LocalDate.now()).updatedBy(user)
+				.updatedOn(LocalDate.now()).build();
 	}
 
+	
+	@DisplayName("Test to get all books ")
 	@Test
 	public void getAllBooksTest() {
-		List<Book> books = Arrays.asList(
-				new Book(1, "Title 1", "Author 1", "Publication 1", 120, 150.0, 50, Active.TRUE, user, LocalDate.now(),
-						user, LocalDate.now()),
-				new Book(2, "Title 2", "Author 2", "Publication 2", 120, 150.0, 50, Active.TRUE, user, LocalDate.now(),
-						user, LocalDate.now()),
-				new Book(3, "Title 3", "Author 3", "Publication 3", 120, 150.0, 50, Active.TRUE, user, LocalDate.now(),
-						user, LocalDate.now()),
-				new Book(4, "Title 4", "Author 4", "Publication 4", 120, 150.0, 50, Active.TRUE, user, LocalDate.now(),
-						user, LocalDate.now()),
-				new Book(5, "Title 5", "Author 5", "Publication 5", 120, 150.0, 50, Active.TRUE, user, LocalDate.now(),
-						user, LocalDate.now()),
-				new Book(6, "Title 4", "Author 4", "Publication 4", 120, 150.0, 50, Active.TRUE, user, LocalDate.now(),
-						user, LocalDate.now()));
+		List<Book> books = Arrays.asList(book);
 
 		when(bookRepository.findAll()).thenReturn(books);
 
 		List<Book> list = bookService.getAllBooks();
 
-		assertEquals(6, list.size());
+		assertEquals(1, list.size());
 	}
 
+	@DisplayName("Test to get book by id ")
 	@Test
 	public void getBookByIdTest() {
 		when(bookRepository.findById(1l)).thenReturn(Optional.of(book));
@@ -72,6 +65,7 @@ public class BookServiceTests {
 		assertEquals("Title 1", b.getTitle());
 	}
 
+	@DisplayName("Test to get all books by author")
 	@Test
 	public void getAllBooksByAuthorTest() {
 		when(bookRepository.findBooksByAuthor("Author 1")).thenReturn(Arrays.asList(book));
@@ -81,6 +75,7 @@ public class BookServiceTests {
 		assertEquals(1, allBooksByAuthor.size());
 	}
 
+	@DisplayName("Test to get all books by publication")
 	@Test
 	public void getAllBooksByPublicationTest() {
 		when(bookRepository.findBooksByPublication("Publication 1")).thenReturn(Arrays.asList(book));
@@ -90,6 +85,7 @@ public class BookServiceTests {
 		assertEquals(1, allBooksByPublication.size());
 	}
 
+	@DisplayName("Test to get all books by title ")
 	@Test
 	public void getAllBooksByTitleTest() {
 		when(bookRepository.findBookByTitle("Title 1")).thenReturn(Arrays.asList(book));
@@ -99,25 +95,27 @@ public class BookServiceTests {
 		assertEquals(1, allBooksByTitle.size());
 	}
 
+	@DisplayName("Test to delete book by id")
 	@Test
 	public void deleteBookByidTest() {
-		Book book = new Book();
-		book.setId(1);
-		
+
 		when(bookRepository.findById(book.getId())).thenReturn(Optional.of(book));
 
-		bookService.deleteBookByid(1l);
-		verify(bookRepository).deleteById(1l);
+		bookService.deleteBookByid(book.getId());
+
+		assertThat(Active.FALSE).isEqualTo(book.getActive());
 	}
 
+	@DisplayName("Test to create book")
 	@Test
 	public void createBookTest() {
-		Book b = new Book("Title 1", "Author 1", "Publication 1", 120, 150.0, 50, Active.TRUE, user, LocalDate.now(),
-				user, LocalDate.now());
+		Book b = new Book("Title 1", "Author 1", "Publication 1", 120, 150.0, 50, user, user);
 		when(bookRepository.save(b)).thenReturn(book);
 
-		Book newBook = bookService.createBook(Optional.of(b));
+		Book newBook = bookService.createBook(b);
 		assertEquals(1, newBook.getId());
 	}
+	
+	
 
 }
