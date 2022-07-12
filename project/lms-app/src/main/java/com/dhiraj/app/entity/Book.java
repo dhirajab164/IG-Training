@@ -2,6 +2,7 @@ package com.dhiraj.app.entity;
 
 import java.time.LocalDate;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +16,15 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.dhiraj.app.entity.enums.Active;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class Book {
 
@@ -52,33 +62,8 @@ public class Book {
 	@Column(name = "updated_on")
 	private LocalDate updatedOn;
 
-	public Book() {
-		super();
-	}
-	
-	
-
-	public Book(long id, String title, String author, String publication, int pages, double price, int copies,
-			Active active, User createdBy, LocalDate createdOn, User updatedBy, LocalDate updatedOn) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.author = author;
-		this.publication = publication;
-		this.pages = pages;
-		this.price = price;
-		this.copies = copies;
-		this.active = active;
-		this.createdBy = createdBy;
-		this.createdOn = createdOn;
-		this.updatedBy = updatedBy;
-		this.updatedOn = updatedOn;
-	}
-
-
-
-	public Book(String title, String author, String publication, int pages, double price, int copies, Active active,
-			User createdBy, LocalDate createdOn, User updatedBy, LocalDate updatedOn) {
+	public Book(String title, String author, String publication, int pages, double price, int copies, User createdBy,
+			User updatedBy) {
 		super();
 		this.title = title;
 		this.author = author;
@@ -86,115 +71,8 @@ public class Book {
 		this.pages = pages;
 		this.price = price;
 		this.copies = copies;
-		this.active = active;
 		this.createdBy = createdBy;
-		this.createdOn = createdOn;
 		this.updatedBy = updatedBy;
-		this.updatedOn = updatedOn;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	public String getPublication() {
-		return publication;
-	}
-
-	public void setPublication(String publication) {
-		this.publication = publication;
-	}
-
-	public int getPages() {
-		return pages;
-	}
-
-	public void setPages(int pages) {
-		this.pages = pages;
-	}
-
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
-	public int getCopies() {
-		return copies;
-	}
-
-	public void setCopies(int copies) {
-		this.copies = copies;
-	}
-
-	public Active getActive() {
-		return active;
-	}
-
-	public void setActive(Active active) {
-		this.active = active;
-	}
-
-	public User getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(User createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public LocalDate getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(LocalDate createdOn) {
-		this.createdOn = createdOn;
-	}
-
-	public User getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(User updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
-	public LocalDate getUpdatedOn() {
-		return updatedOn;
-	}
-
-	public void setUpdatedOn(LocalDate updatedOn) {
-		this.updatedOn = updatedOn;
-	}
-
-	@Override
-	public String toString() {
-		return "Book [id=" + id + ", title=" + title + ", author=" + author + ", publication=" + publication
-				+ ", pages=" + pages + ", price=" + price + ", copies=" + copies + ", active=" + active + ", createdBy="
-				+ createdBy + ", createdOn=" + createdOn + ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn
-				+ "]";
 	}
 
 }
