@@ -53,7 +53,7 @@ public class TransactionServiceImpl implements ITransactionService {
 
 	@Override
 	public List<Transaction> getAllTransactionsByStatus(int status) {
-		List<Transaction> transactions = transactionRepository.findTransactionsByTransactionStatus(status);
+		List<Transaction> transactions = transactionRepository.findTransactionsByStatus(status);
 		if (!transactions.isEmpty()) {
 			return transactions;
 		} else {
