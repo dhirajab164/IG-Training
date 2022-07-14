@@ -53,7 +53,7 @@ public class BookServiceImpl implements IBookService {
 	}
 
 	@Override
-	public List<Book> getAllBooksByActive(int active) {
+	public List<Book> getAllBooksByActive(Active active) {
 		List<Book> books = bookRepository.findBooksByActive(active);
 		if (!books.isEmpty()) {
 			return books;
