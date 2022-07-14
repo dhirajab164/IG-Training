@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dhiraj.app.entity.Transaction;
+import com.dhiraj.app.entity.enums.TransactionStatus;
 import com.dhiraj.app.exception.ErrorMessage;
 import com.dhiraj.app.service.ITransactionService;
 
@@ -49,7 +50,8 @@ public class TransactionController {
 	@GetMapping("/status/{status}")
 	public ResponseEntity<?> getAllTransactionsByAuthor(@PathVariable int status) {
 		if (status >= 0 || status <= 2) {
-			List<Transaction> Transactions = transactionService.getAllTransactionsByStatus(status);
+			List<Transaction> Transactions = transactionService
+					.getAllTransactionsByStatus(TransactionStatus.of(status));
 			return new ResponseEntity<List<Transaction>>(Transactions, HttpStatus.OK);
 		} else {
 			ErrorMessage errorMessage = ErrorMessage.builder().statusCode(HttpStatus.BAD_REQUEST.value())
@@ -88,7 +90,7 @@ public class TransactionController {
 	}
 
 	@DeleteMapping("/transaction/{id}")
-	public ResponseEntity<?> deleteTransactionById(long id) {
+	public ResponseEntity<?> deleteTransactionById(@PathVariable long id) {
 		if (id <= 0) {
 			ErrorMessage errorMessage = ErrorMessage.builder().statusCode(HttpStatus.BAD_REQUEST.value())
 					.message("Incorrect Id sent.").description("Id should be greater than zero").build();
