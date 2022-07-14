@@ -76,7 +76,7 @@ public class UserController {
 	}
 
 	@DeleteMapping("/user/{id}")
-	public ResponseEntity<?> deleteBookById(long id) {
+	public ResponseEntity<?> deleteBookById(@PathVariable long id) {
 		if (id <= 0) {
 			ErrorMessage errorMessage = ErrorMessage.builder().statusCode(HttpStatus.BAD_REQUEST.value())
 					.message("Incorrect Id sent.").description("Id should be greater than zero").build();
