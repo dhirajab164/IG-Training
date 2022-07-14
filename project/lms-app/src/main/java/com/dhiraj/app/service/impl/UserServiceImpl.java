@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.dhiraj.app.entity.User;
 import com.dhiraj.app.entity.enums.Active;
+import com.dhiraj.app.entity.enums.UserType;
 import com.dhiraj.app.exception.BusinessException;
 import com.dhiraj.app.repository.UserRepository;
 import com.dhiraj.app.service.IUserService;
@@ -51,7 +52,7 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public List<User> getAllUsersByType(int type) {
+	public List<User> getAllUsersByType(UserType type) {
 		List<User> users = userRepository.findUsersByType(type);
 		if (!users.isEmpty()) {
 			return users;
