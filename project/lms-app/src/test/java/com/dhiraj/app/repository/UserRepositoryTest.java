@@ -28,7 +28,7 @@ public class UserRepositoryTest {
 	@BeforeEach
 	public void init() {
 		user = User.builder().firstName("John").lastName("Doe").age(26).gender(Gender.M).email("john@mail.com")
-				.phone("1231231231").city("city").type(UserType.C).active(Active.TRUE).build();
+				.phone("1231231231").city("city").type(UserType.Customer).active(Active.TRUE).build();
 		userRepository.save(user);
 	}
 
@@ -52,9 +52,9 @@ public class UserRepositoryTest {
 	@DisplayName("Test for user by type")
 	@Test
 	public void findUserByTypeTest() {
-		List<User> userByTitle = userRepository.findUsersByType(UserType.C);
+		List<User> userByTitle = userRepository.findUsersByType(UserType.Customer);
 		for (User user : userByTitle) {
-			assertThat(user.getType()).isEqualTo(UserType.C);
+			assertThat(user.getType()).isEqualTo(UserType.Customer);
 		}
 	}
 
