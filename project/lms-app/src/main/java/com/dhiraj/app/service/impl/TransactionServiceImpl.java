@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.dhiraj.app.entity.Transaction;
 import com.dhiraj.app.entity.enums.Active;
+import com.dhiraj.app.entity.enums.TransactionStatus;
 import com.dhiraj.app.exception.BusinessException;
 import com.dhiraj.app.repository.TransactionRepository;
 import com.dhiraj.app.service.ITransactionService;
@@ -52,7 +53,7 @@ public class TransactionServiceImpl implements ITransactionService {
 	}
 
 	@Override
-	public List<Transaction> getAllTransactionsByStatus(int status) {
+	public List<Transaction> getAllTransactionsByStatus(TransactionStatus status) {
 		List<Transaction> transactions = transactionRepository.findTransactionsByStatus(status);
 		if (!transactions.isEmpty()) {
 			return transactions;
