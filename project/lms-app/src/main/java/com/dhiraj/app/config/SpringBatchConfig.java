@@ -51,7 +51,7 @@ public class SpringBatchConfig {
 
 		lineTokenizer.setDelimiter(",");
 		lineTokenizer.setStrict(false);
-//		lineTokenizer.setNames("id", "title", "author", "publication", "pages", "price", "copies", "active");
+		
 		lineTokenizer.setNames("title", "author", "publication", "pages", "price", "copies");
 
 		BeanWrapperFieldSetMapper<Book> beanWrapperFieldSetMapper = new BeanWrapperFieldSetMapper<>();
