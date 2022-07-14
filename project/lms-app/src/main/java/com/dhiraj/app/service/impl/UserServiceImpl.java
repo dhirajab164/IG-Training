@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dhiraj.app.entity.User;
 import com.dhiraj.app.entity.enums.Active;
@@ -13,6 +14,7 @@ import com.dhiraj.app.exception.BusinessException;
 import com.dhiraj.app.repository.UserRepository;
 import com.dhiraj.app.service.IUserService;
 
+@Transactional
 @Service
 public class UserServiceImpl implements IUserService {
 
