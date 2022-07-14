@@ -2,7 +2,6 @@ package com.dhiraj.app.controller;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dhiraj.app.entity.Book;
-import com.dhiraj.app.exception.BusinessException;
+import com.dhiraj.app.entity.enums.Active;
 import com.dhiraj.app.exception.ErrorMessage;
-import com.dhiraj.app.exception.ResourceNotFoundException;
 import com.dhiraj.app.service.IBookService;
 
 @RestController
@@ -41,7 +39,7 @@ public class BookController {
 	@GetMapping("/active/{active}")
 	public ResponseEntity<?> getAllBooksByActive(@PathVariable int active) {
 		if (active == 0 || active == 1) {
-			List<Book> books = bookService.getAllBooksByActive(active);
+			List<Book> books = bookService.getAllBooksByActive(Active.of(active));
 			return new ResponseEntity<List<Book>>(books, HttpStatus.OK);
 		} else {
 			ErrorMessage errorMessage = ErrorMessage.builder().statusCode(HttpStatus.BAD_REQUEST.value())
@@ -128,7 +126,7 @@ public class BookController {
 	}
 
 	@DeleteMapping("/book/{id}")
-	public ResponseEntity<?> deleteBookById(long id) {
+	public ResponseEntity<?> deleteBookById(@PathVariable long id) {
 		if (id <= 0) {
 			ErrorMessage errorMessage = ErrorMessage.builder().statusCode(HttpStatus.BAD_REQUEST.value())
 					.message("Incorrect Id sent.").description("Id should be greater than zero").build();
