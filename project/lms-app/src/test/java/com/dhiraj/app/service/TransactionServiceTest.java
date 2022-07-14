@@ -48,9 +48,9 @@ public class TransactionServiceTest {
 	public void init() {
 
 		customer = User.builder().firstName("John").lastName("Doe").age(26).gender(Gender.M).email("john@mail.com")
-				.phone("1231231231").city("city").type(UserType.C).active(Active.TRUE).build();
+				.phone("1231231231").city("city").type(UserType.Customer).active(Active.TRUE).build();
 		librarian = User.builder().firstName("Jane").lastName("Doe").age(26).gender(Gender.F).email("jane@mail.com")
-				.phone("2342342342").city("city").type(UserType.L).active(Active.TRUE).build();
+				.phone("2342342342").city("city").type(UserType.Librarian).active(Active.TRUE).build();
 
 		book = Book.builder().id(1l).title("Title 1").author("Author 1").publication("Publication 1").pages(120)
 				.price(150.0).copies(100).active(Active.TRUE).createdBy(librarian).createdOn(LocalDate.now())
