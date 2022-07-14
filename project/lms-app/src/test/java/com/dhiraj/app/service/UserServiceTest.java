@@ -37,7 +37,7 @@ public class UserServiceTest {
 	@BeforeEach
 	private void init() {
 		user = User.builder().firstName("John").lastName("Doe").age(26).gender(Gender.M).email("john@mail.com")
-				.phone("1231231231").city("city").type(UserType.C).active(Active.TRUE).build();
+				.phone("1231231231").city("city").type(UserType.Customer).active(Active.TRUE).build();
 	}
 
 	@DisplayName("Test get all users ")
@@ -76,7 +76,7 @@ public class UserServiceTest {
 	@Test
 	public void createUserTest() {
 		User usr = User.builder().id(1).firstName("John").lastName("Doe").age(26).gender(Gender.M)
-				.email("john@mail.com").phone("1231231231").city("city").type(UserType.C).active(Active.TRUE).build();
+				.email("john@mail.com").phone("1231231231").city("city").type(UserType.Customer).active(Active.TRUE).build();
 		when(userRepository.save(user)).thenReturn(usr);
 
 		User newUser = userService.createUser(user);
