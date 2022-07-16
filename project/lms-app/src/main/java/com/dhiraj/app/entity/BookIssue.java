@@ -14,7 +14,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.dhiraj.app.entity.enums.Active;
-import com.dhiraj.app.entity.enums.TransactionStatus;
+import com.dhiraj.app.entity.enums.BookIssueStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Transaction {
+public class BookIssue {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +45,7 @@ public class Transaction {
 
 	private Active active = Active.TRUE;
 
-	private TransactionStatus status = TransactionStatus.PENDING;
+	private BookIssueStatus status = BookIssueStatus.PENDING;
 
 	private String remark;
 
@@ -71,7 +71,7 @@ public class Transaction {
 	@Column(name = "updated_on")
 	private LocalDate updatedOn;
 
-	public Transaction(Book book, User issuedTo, User issuedBy, LocalDate issuedOn, LocalDate toBeReturnedOn,
+	public BookIssue(Book book, User issuedTo, User issuedBy, LocalDate issuedOn, LocalDate toBeReturnedOn,
 			User createdBy, User updatedBy) {
 		super();
 		this.book = book;
