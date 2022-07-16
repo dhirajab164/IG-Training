@@ -1,6 +1,6 @@
 package com.dhiraj.app;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,8 +18,8 @@ public class LmsAppApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		log.info("Application started on {}.", LocalDate.now());
-		System.out.println("Application started on." + LocalDate.now());
+		log.info("Application started on {}.", LocalDateTime.now());
+		System.out.println("Application started on." + LocalDateTime.now());
 	}
 
 }
