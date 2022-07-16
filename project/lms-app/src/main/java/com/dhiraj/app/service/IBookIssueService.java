@@ -2,19 +2,21 @@ package com.dhiraj.app.service;
 
 import java.util.List;
 
-import com.dhiraj.app.entity.Transaction;
-import com.dhiraj.app.entity.enums.TransactionStatus;
+import com.dhiraj.app.entity.BookIssue;
+import com.dhiraj.app.entity.enums.BookIssueStatus;
 
-public interface ITransactionService {
-	public Transaction createTransaction(Transaction transaction);
+public interface IBookIssueService {
+	public BookIssue createBookIssue(BookIssue bookIssue);
 
-	public Transaction getTransactionById(long id);
+	public BookIssue getBookIssueById(long id);
 
-	public List<Transaction> getAllTransactions();
+	public List<BookIssue> getAllBookIssues();
 
-	public List<Transaction> getAllTransactionsByStatus(TransactionStatus status);
+	public List<BookIssue> getAllBookIssuesByStatus(BookIssueStatus status);
 
-	public Transaction updateTransaction(long id, Transaction transaction);
+	public BookIssue updateBookIssue(BookIssue bookIssue);
+	
+	public BookIssue patchBookIssue(long id, BookIssue bookIssue);
 
-	public void deleteTransactionById(long id);
+	public void deleteBookIssueById(long id);
 }
