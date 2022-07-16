@@ -7,85 +7,99 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dhiraj.app.entity.Transaction;
+import com.dhiraj.app.entity.BookIssue;
 import com.dhiraj.app.entity.enums.Active;
-import com.dhiraj.app.entity.enums.TransactionStatus;
+import com.dhiraj.app.entity.enums.BookIssueStatus;
 import com.dhiraj.app.exception.BusinessException;
-import com.dhiraj.app.repository.TransactionRepository;
-import com.dhiraj.app.service.ITransactionService;
+import com.dhiraj.app.repository.BookIssueRepository;
+import com.dhiraj.app.service.IBookIssueService;
 
 @Transactional
 @Service
-public class TransactionServiceImpl implements ITransactionService {
+public class BookIssueServiceImpl implements IBookIssueService {
 
-	private TransactionRepository transactionRepository;
+	private BookIssueRepository bookIssueRepository;
 
-	public TransactionServiceImpl(TransactionRepository transactionRepository) {
+	public BookIssueServiceImpl(BookIssueRepository bookIssueRepository) {
 		super();
-		this.transactionRepository = transactionRepository;
+		this.bookIssueRepository = bookIssueRepository;
 	}
 
 	@Override
-	public Transaction createTransaction(Transaction transaction) {
+	public BookIssue createBookIssue(BookIssue bookIssue) {
 
-		Transaction savedTransaction = transactionRepository.save(transaction);
-		if (savedTransaction != null)
-			return savedTransaction;
+		BookIssue savedBookIssue = bookIssueRepository.save(bookIssue);
+		if (savedBookIssue != null)
+			return savedBookIssue;
 		else
-			throw new BusinessException("Error creating new Transaction.");
+			throw new BusinessException("Error creating new BookIssue.");
 	}
 
 	@Override
-	public Transaction getTransactionById(long id) {
-		Optional<Transaction> optional = transactionRepository.findById(id);
-		Transaction transaction = optional.isPresent() && optional.get().getActive() == Active.TRUE ? optional.get()
-				: optional.orElseThrow(() -> new BusinessException("Transaction Not Found."));
-		return transaction;
+	public BookIssue getBookIssueById(long id) {
+		Optional<BookIssue> optional = bookIssueRepository.findById(id);
+		BookIssue bookIssue = optional.isPresent() && optional.get().getActive() == Active.TRUE ? optional.get()
+				: optional.orElseThrow(() -> new BusinessException("BookIssue Not Found."));
+		return bookIssue;
 	}
 
 	@Override
-	public List<Transaction> getAllTransactions() {
-		List<Transaction> transactions = transactionRepository.findAll();
-		if (!transactions.isEmpty()) {
-			return transactions.stream().filter(transaction -> transaction.getActive() == Active.TRUE)
+	public List<BookIssue> getAllBookIssues() {
+		List<BookIssue> bookIssues = bookIssueRepository.findAll();
+		if (!bookIssues.isEmpty()) {
+			return bookIssues.stream().filter(issue -> issue.getActive() == Active.TRUE)
 					.collect(Collectors.toList());
 		} else {
-			throw new BusinessException("Transactions not Found. List is Empty.");
+			throw new BusinessException("BookIssues not Found. List is Empty.");
 		}
 	}
 
 	@Override
-	public List<Transaction> getAllTransactionsByStatus(TransactionStatus status) {
-		List<Transaction> transactions = transactionRepository.findTransactionsByStatus(status);
-		if (!transactions.isEmpty()) {
-			return transactions;
+	public List<BookIssue> getAllBookIssuesByStatus(BookIssueStatus status) {
+		List<BookIssue> bookIssues = bookIssueRepository.findBookIssueByBookIssueStatus(status);
+		if (!bookIssues.isEmpty()) {
+			return bookIssues;
 		} else {
-			throw new BusinessException("Transaction not Found for status: " + status + ". List is Empty.");
+			throw new BusinessException("BookIssue not Found for status: " + status + ". List is Empty.");
 		}
 	}
 
 	@Override
-	public Transaction updateTransaction(long id, Transaction transaction) {
-		Transaction toUpdate = getTransactionById(id);
-		toUpdate.setBook(transaction.getBook());
-		toUpdate.setIssuedTo(transaction.getIssuedTo());
-		toUpdate.setIssuedBy(transaction.getIssuedBy());
-		toUpdate.setActive(transaction.getActive());
-		toUpdate.setStatus(transaction.getStatus());
-		toUpdate.setRemark(transaction.getRemark());
-		toUpdate.setIssuedOn(transaction.getIssuedOn());
-		toUpdate.setToBeReturnedOn(transaction.getToBeReturnedOn());
+	public BookIssue updateBookIssue(BookIssue bookIssue) {
+		BookIssue toUpdate = getBookIssueById(bookIssue.getId());
+		toUpdate.setBook(bookIssue.getBook());
+		toUpdate.setIssuedTo(bookIssue.getIssuedTo());
+		toUpdate.setIssuedBy(bookIssue.getIssuedBy());
+		toUpdate.setActive(bookIssue.getActive());
+		toUpdate.setStatus(bookIssue.getStatus());
+		toUpdate.setRemark(bookIssue.getRemark());
+		toUpdate.setIssuedOn(bookIssue.getIssuedOn());
+		toUpdate.setToBeReturnedOn(bookIssue.getToBeReturnedOn());
 		return toUpdate;
 	}
 
 	@Override
-	public void deleteTransactionById(long id) {
-		Optional<Transaction> optional = transactionRepository.findById(id);
+	public void deleteBookIssueById(long id) {
+		Optional<BookIssue> optional = bookIssueRepository.findById(id);
 		if (optional.isPresent()) {
 			optional.get().setActive(Active.FALSE);
-			updateTransaction(id, optional.get());
+			patchBookIssue(id, optional.get());
 		} else
-			optional.orElseThrow(() -> new BusinessException("Transaction Not Found."));
+			optional.orElseThrow(() -> new BusinessException("BookIssue Not Found."));
+	}
+
+	@Override
+	public BookIssue patchBookIssue(long id, BookIssue bookIssue) {
+		BookIssue toUpdate = getBookIssueById(bookIssue.getId());
+		toUpdate.setBook(bookIssue.getBook());
+		toUpdate.setIssuedTo(bookIssue.getIssuedTo());
+		toUpdate.setIssuedBy(bookIssue.getIssuedBy());
+		toUpdate.setActive(bookIssue.getActive());
+		toUpdate.setStatus(bookIssue.getStatus());
+		toUpdate.setRemark(bookIssue.getRemark());
+		toUpdate.setIssuedOn(bookIssue.getIssuedOn());
+		toUpdate.setToBeReturnedOn(bookIssue.getToBeReturnedOn());
+		return toUpdate;
 	}
 
 }
