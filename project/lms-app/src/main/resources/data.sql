@@ -16,5 +16,5 @@ INSERT INTO `book` (`title`, `author`, `publication`, `pages`, `price`, `copies`
 INSERT INTO `book` (`title`, `author`, `publication`, `pages`, `price`, `copies`, `active`, `created_by`, `created_on`, `updated_by`, `updated_on`) VALUES('Title 6', 'Author 6', 'Publication 6', 120, 150, 50, 0, 2, now(), 2, now());
 INSERT INTO `book` (`title`, `author`, `publication`, `pages`, `price`, `copies`, `active`, `created_by`, `created_on`, `updated_by`, `updated_on`) VALUES('Title 7', 'Author 7', 'Publication 7', 120, 150, 50, 1, 2, now(), 2, now());
 INSERT INTO `book` (`title`, `author`, `publication`, `pages`, `price`, `copies`, `active`, `created_by`, `created_on`, `updated_by`, `updated_on`) VALUES('Title 8', 'Author 8', 'Publication 8', 120, 150, 50, 0, 2, now(), 2, now());
-INSERT INTO `transaction` (`active`, `created_on`, `issued_on`, `remark`, `status`, `to_be_returned_on`, `updated_on`, `book_id`, `created_by`, `issued_by`, `issued_to`, `updated_by`) VALUES ('1', '1', '2022-07-14', '2022-07-14', 'NA', '0', '2022-07-17', '2022-07-14', '1', '1', '2', '1', '1');
+INSERT INTO `transaction` (`active`, `created_on`, `issued_on`, `remark`, `status`, `to_be_returned_on`, `updated_on`, `book_id`, `created_by`, `issued_by`, `issued_to`, `updated_by`) VALUES ('1', '2022-07-14', '2022-07-14', 'NA', '0', '2022-07-17', '2022-07-14', '1', '1', '2', '1', '1');
 
