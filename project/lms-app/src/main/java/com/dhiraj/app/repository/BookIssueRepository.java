@@ -4,11 +4,12 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.dhiraj.app.entity.Transaction;
-import com.dhiraj.app.entity.enums.TransactionStatus;
+import com.dhiraj.app.entity.BookIssue;
+import com.dhiraj.app.entity.enums.BookIssueStatus;
 
-public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+public interface BookIssueRepository extends JpaRepository<BookIssue, Long> {
 
-	List<Transaction> findTransactionsByStatus(TransactionStatus status);
+//	List<BookIssue> findBookIssueByBookIssueStatus(BookIssueStatus status);
+	
 
 }
