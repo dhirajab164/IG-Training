@@ -11,21 +11,23 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.dhiraj.app.entity.Book;
-import com.dhiraj.app.entity.Transaction;
+import com.dhiraj.app.entity.BookIssue;
 import com.dhiraj.app.entity.User;
 import com.dhiraj.app.entity.enums.Active;
+import com.dhiraj.app.entity.enums.BookIssueStatus;
 import com.dhiraj.app.entity.enums.Gender;
-import com.dhiraj.app.entity.enums.TransactionStatus;
 import com.dhiraj.app.entity.enums.UserType;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class TransactionRepositoryTest {
+@ActiveProfiles("test")
+public class BookIssueRepositoryTest {
 
 	@Autowired
-	private TransactionRepository transactionRepository;
+	private BookIssueRepository bookIssueRepository;
 
 	@Autowired
 	private BookRepository bookRepository;
@@ -33,7 +35,8 @@ public class TransactionRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
 
-	Transaction transaction;
+	
+	BookIssue bookIssue;
 	Book book;
 	User customer;
 	User librarian;
@@ -53,50 +56,50 @@ public class TransactionRepositoryTest {
 				.price(150.0).copies(100).active(Active.TRUE).createdBy(librarian).createdOn(LocalDate.now())
 				.updatedBy(librarian).updatedOn(LocalDate.now()).build();
 
-		transaction = Transaction.builder().id(1l).book(book).issuedTo(customer).issuedBy(librarian).issuedOn(now)
-				.toBeReturnedOn(nowPlus3Days).status(TransactionStatus.PENDING).active(Active.TRUE).build();
+		bookIssue = BookIssue.builder().id(1l).book(book).issuedTo(customer).issuedBy(librarian).issuedOn(now)
+				.toBeReturnedOn(nowPlus3Days).status(BookIssueStatus.PENDING).active(Active.TRUE).build();
 		userRepository.save(customer);
 		userRepository.save(librarian);
 		bookRepository.save(book);
-		transactionRepository.save(transaction);
+		bookIssueRepository.save(bookIssue);
 	}
 
-	@DisplayName("Test for transaction by id")
+	@DisplayName("Test for bookIssue by id")
 	@Test
 	public void findByIdTest() {
-		Transaction transactionById = transactionRepository.findById(transaction.getId()).get();
-		System.out.println("transactionById: " + transactionById);
+		BookIssue bookIssueById = bookIssueRepository.findById(bookIssue.getId()).get();
+		System.out.println("IssueById: " + bookIssueById);
 
-		assertThat(transactionById.getStatus()).isEqualTo(transaction.getStatus());
+		assertThat(bookIssueById.getStatus()).isEqualTo(bookIssue.getStatus());
 	}
 
-	@DisplayName("Test for get all transactions")
+	@DisplayName("Test for get all bookIssues")
 	@Test
 	public void findAllTest() {
-		List<Transaction> transactions = transactionRepository.findAll();
+		List<BookIssue> bookIssues = bookIssueRepository.findAll();
 
-		assertThat(transactions).isNotNull();
-		assertThat(transactions.size()).isEqualTo(1);
+		assertThat(bookIssues).isNotNull();
+		assertThat(bookIssues.size()).isEqualTo(1);
 	}
 
-	@DisplayName("Test for transaction save")
+	@DisplayName("Test for bookIssue save")
 	@Test
-	public void transactionSaveTest() {
+	public void bookIssueSaveTest() {
 
-		Transaction savedTransaction = transactionRepository.save(transaction);
-		assertThat(savedTransaction).isNotNull();
-		assertThat(savedTransaction.getId()).isGreaterThan(0);
+		BookIssue savedbookIssue = bookIssueRepository.save(bookIssue);
+		assertThat(savedbookIssue).isNotNull();
+		assertThat(savedbookIssue.getId()).isGreaterThan(0);
 	}
 
-	@DisplayName("Test for transaction update")
+	@DisplayName("Test for bookIssue update")
 	@Test
-	public void transactionUpdateTest() {
+	public void bookIssueUpdateTest() {
 
-		Transaction savedtransaction = transactionRepository.findById(transaction.getId()).get();
-		TransactionStatus status = TransactionStatus.APPROVED;
-		savedtransaction.setStatus(status);
+		BookIssue savedbookIssue = bookIssueRepository.findById(bookIssue.getId()).get();
+		BookIssueStatus status = BookIssueStatus.APPROVED;
+		savedbookIssue.setStatus(status);
 
-		assertThat(savedtransaction.getStatus()).isEqualTo(status);
+		assertThat(savedbookIssue.getStatus()).isEqualTo(status);
 	}
 
 }
