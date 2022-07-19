@@ -9,7 +9,6 @@ import com.dhiraj.app.entity.enums.BookIssueStatus;
 
 public interface BookIssueRepository extends JpaRepository<BookIssue, Long> {
 
-//	List<BookIssue> findBookIssueByBookIssueStatus(BookIssueStatus status);
-	
+	List<BookIssue> findByStatus(BookIssueStatus status);
 
 }
