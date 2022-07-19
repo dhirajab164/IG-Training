@@ -4,8 +4,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,30 +28,30 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.dhiraj.app.entity.Book;
-import com.dhiraj.app.entity.Transaction;
+import com.dhiraj.app.entity.BookIssue;
 import com.dhiraj.app.entity.User;
 import com.dhiraj.app.entity.enums.Active;
+import com.dhiraj.app.entity.enums.BookIssueStatus;
 import com.dhiraj.app.entity.enums.Gender;
-import com.dhiraj.app.entity.enums.TransactionStatus;
 import com.dhiraj.app.entity.enums.UserType;
-import com.dhiraj.app.service.ITransactionService;
+import com.dhiraj.app.service.IBookIssueService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(TransactionController.class)
-public class TransactionControllerTest {
+@WebMvcTest(BookIssueController.class)
+public class BookIssueControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@MockBean
-	private ITransactionService transactionService;
+	private IBookIssueService bookIssueService;
 
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	Transaction transaction;
+	BookIssue bookIssue;
 	Book book;
 	User customer;
 	User librarian;
@@ -71,77 +71,76 @@ public class TransactionControllerTest {
 				.price(150.0).copies(100).active(Active.TRUE).createdBy(librarian).createdOn(LocalDate.now())
 				.updatedBy(librarian).updatedOn(LocalDate.now()).build();
 
-		transaction = Transaction.builder().id(1l).book(book).issuedTo(customer).issuedBy(librarian).issuedOn(now)
+		bookIssue = BookIssue.builder().id(1l).book(book).issuedTo(customer).issuedBy(librarian).issuedOn(now)
 				.toBeReturnedOn(nowPlus3Days).build();
 
+	} 
+
+	@DisplayName("Test get all BookIssues")
+	@Test
+	public void getAllBookIssuesTest() throws Exception {
+
+		List<BookIssue> bookIssues = Arrays.asList(bookIssue);
+
+		when(bookIssueService.getAllBookIssues()).thenReturn(bookIssues);
+
+		ResultActions response = mockMvc.perform(get("/api/book_issues").contentType(MediaType.APPLICATION_JSON));
+
+		response.andExpect(status().isOk()).andDo(print()).andExpect(jsonPath("$.size()", is(bookIssues.size())));
 	}
 
-	@DisplayName("Test get all transactions")
+	@DisplayName("Test to get bookIssue by id")
 	@Test
-	public void getAllTransactionsTest() throws Exception {
+	public void getBookIssueByIdTest() throws Exception {
 
-		List<Transaction> transactions = Arrays.asList(transaction);
-
-		when(transactionService.getAllTransactions()).thenReturn(transactions);
-
-		ResultActions response = mockMvc.perform(get("/api/transactions").contentType(MediaType.APPLICATION_JSON));
-
-		response.andExpect(status().isOk()).andDo(print()).andExpect(jsonPath("$.size()", is(transactions.size())));
-	}
-
-	@DisplayName("Test to get transaction by id")
-	@Test
-	public void getTransactionByIdTest() throws Exception {
-
-		long transactionId = 1;
-		when(transactionService.getTransactionById(transactionId)).thenReturn(transaction);
+		long bookIssueId = 1;
+		when(bookIssueService.getBookIssueById(bookIssueId)).thenReturn(bookIssue);
 
 		ResultActions response = mockMvc
-				.perform(get("/api/transactions/{id}", transactionId).contentType(MediaType.APPLICATION_JSON));
+				.perform(get("/api/book_issues/{id}", bookIssueId).contentType(MediaType.APPLICATION_JSON));
 
 		response.andExpect(status().isOk()).andDo(print()).andExpect(jsonPath("$.book.title", is("Title 1")))
 				.andExpect(jsonPath("$.issuedTo.type", is("Customer")));
 	}
 
-	@DisplayName("Test to create transaction")
+	@DisplayName("Test to create bookIssue")
 	@Test
-	public void creaTetransactionTest() throws JsonProcessingException, Exception {
-		when(transactionService.createTransaction(transaction)).thenReturn(transaction);
+	public void creaTeBookIssueTest() throws JsonProcessingException, Exception {
+		when(bookIssueService.createBookIssue(bookIssue)).thenReturn(bookIssue);
 
-		ResultActions response = mockMvc.perform(post("/api/transactions/transaction")
-				.contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(transaction)));
+		ResultActions response = mockMvc.perform(post("/api/book_issues/book_issue")
+				.contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(bookIssue)));
 
 		response.andDo(print()).andExpect(status().isCreated()).andExpect(jsonPath("$.book.title", is("Title 1")));
 	}
 
-	@DisplayName("Test to update transaction")
+	@DisplayName("Test to update bookIssue")
 	@Test
-	public void updateTransactionTest() throws JsonProcessingException, Exception {
+	public void updateBookIssueTest() throws JsonProcessingException, Exception {
 
-		transaction = Transaction.builder().id(1l).book(book).issuedTo(customer).issuedBy(librarian).issuedOn(now)
-				.toBeReturnedOn(nowPlus3Days).status(TransactionStatus.PENDING).build();
+		bookIssue = BookIssue.builder().id(1l).book(book).issuedTo(customer).issuedBy(librarian).issuedOn(now)
+				.toBeReturnedOn(nowPlus3Days).status(BookIssueStatus.PENDING).build();
 
-		when(transactionService.getTransactionById(transaction.getId())).thenReturn(transaction);
+		when(bookIssueService.getBookIssueById(bookIssue.getId())).thenReturn(bookIssue);
 
-		Transaction updatedTansaction = Transaction.builder().id(1l).book(book).issuedTo(customer).issuedBy(librarian)
-				.issuedOn(now).toBeReturnedOn(nowPlus3Days).status(TransactionStatus.APPROVED).build();
+		BookIssue updatedBookIssue = BookIssue.builder().id(1l).book(book).issuedTo(customer).issuedBy(librarian)
+				.issuedOn(now).toBeReturnedOn(nowPlus3Days).status(BookIssueStatus.APPROVED).build();
 
-		when(transactionService.updateTransaction(transaction.getId(), transaction)).thenReturn(updatedTansaction);
-		ResultActions response = mockMvc.perform(patch("/api/transactions/transaction/{id}", transaction.getId())
-				.contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(transaction)));
+		when(bookIssueService.updateBookIssue(bookIssue)).thenReturn(updatedBookIssue);
+		ResultActions response = mockMvc.perform(put("/api/book_issues/book_issue")
+				.contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(bookIssue)));
 
-		response.andDo(print()).andExpect(status().isAccepted())
-				.andExpect(jsonPath("$.status", is("APPROVED")));
+		response.andDo(print()).andExpect(status().isAccepted()).andExpect(jsonPath("$.status", is("APPROVED")));
 	}
 
-	@DisplayName("Test to delete transaction")
+	@DisplayName("Test to delete bookIssue")
 	@Test
-	public void deleteTransactionById() throws Exception {
+	public void deleteBookIssueById() throws Exception {
 
-		when(transactionService.getTransactionById(1L)).thenReturn(transaction);
-		BDDMockito.willDoNothing().given(transactionService).deleteTransactionById(1L);
+		when(bookIssueService.getBookIssueById(1L)).thenReturn(bookIssue);
+		BDDMockito.willDoNothing().given(bookIssueService).deleteBookIssueById(1L);
 
-		ResultActions response = mockMvc.perform(delete("/api/transactions/transaction/{id}", 1L));
+		ResultActions response = mockMvc.perform(delete("/api/book_issues/book_issue/{id}", 1L));
 
 		response.andExpect(status().isNoContent()).andDo(print());
 	}
