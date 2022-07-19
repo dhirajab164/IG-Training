@@ -1,6 +1,7 @@
 package com.dhiraj.app.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -13,37 +14,39 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.dhiraj.app.entity.Book;
-import com.dhiraj.app.entity.Transaction;
+import com.dhiraj.app.entity.BookIssue;
 import com.dhiraj.app.entity.User;
 import com.dhiraj.app.entity.enums.Active;
+import com.dhiraj.app.entity.enums.BookIssueStatus;
 import com.dhiraj.app.entity.enums.Gender;
-import com.dhiraj.app.entity.enums.TransactionStatus;
 import com.dhiraj.app.entity.enums.UserType;
-import com.dhiraj.app.repository.TransactionRepository;
-import com.dhiraj.app.service.impl.TransactionServiceImpl;
+import com.dhiraj.app.repository.BookIssueRepository;
+import com.dhiraj.app.service.impl.BookIssueServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
-public class TransactionServiceTest {
+public class BookIssueServiceTest {
 
 	@Mock
-	private TransactionRepository transactionRepository;
+	private BookIssueRepository bookIssueRepository;
 
 	@InjectMocks
-	private TransactionServiceImpl transactionService;
+	private BookIssueServiceImpl bookIssueService;
 
-	Transaction transaction;
+	BookIssue bookIssue;
 	Book book;
 	User customer;
 	User librarian;
 
 	LocalDate now = LocalDate.now();
 	LocalDate nowPlus3Days = now.plusDays(3);
-	
+
 	@BeforeEach
 	public void init() {
 
@@ -56,65 +59,66 @@ public class TransactionServiceTest {
 				.price(150.0).copies(100).active(Active.TRUE).createdBy(librarian).createdOn(LocalDate.now())
 				.updatedBy(librarian).updatedOn(LocalDate.now()).build();
 
-		transaction = Transaction.builder().book(book).issuedTo(customer).issuedBy(librarian).issuedOn(now)
+		bookIssue = BookIssue.builder().id(1).book(book).issuedTo(customer).issuedBy(librarian).issuedOn(now)
+				.active(Active.TRUE).toBeReturnedOn(nowPlus3Days).build();
+
+	}
+
+	@DisplayName("Test get all BookIssues")
+	@Test
+	public void getAllBookIssuesTest() {
+		BookIssue bookIssue1 = BookIssue.builder().id(1).book(book).issuedTo(customer).issuedBy(librarian).issuedOn(now)
+				.active(Active.TRUE).toBeReturnedOn(nowPlus3Days).build();
+		List<BookIssue> bookIssues = Arrays.asList(bookIssue, bookIssue1);
+
+		when(bookIssueRepository.findAll()).thenReturn(bookIssues);
+
+		List<BookIssue> list = bookIssueService.getAllBookIssues();
+
+		assertThat(list.size()).isEqualTo(2);
+	}
+
+	@DisplayName("Test get bookIssue by id")
+	@Test
+	public void getBookIssueByIdTest() {
+		when(bookIssueRepository.findById(1l)).thenReturn(Optional.of(bookIssue));
+
+		BookIssue bookIssueById = bookIssueService.getBookIssueById(1l);
+
+		assertThat(bookIssueById.getBook().getTitle()).isEqualTo(book.getTitle());
+	}
+
+	@DisplayName("Test delete BookIssue by id")
+	@Test
+	public void deleteBookIssueByIdTest() {
+
+		when(bookIssueRepository.findById(bookIssue.getId())).thenReturn(Optional.of(bookIssue));
+
+		bookIssueService.deleteBookIssueById(bookIssue.getId());
+		assertEquals(Active.FALSE, bookIssue.getActive());
+	}
+
+	@DisplayName("Test create bookIssue")
+	@Test
+	public void BookIssueCreateTest() {
+		BookIssue savedTr = BookIssue.builder().id(1).book(book).issuedTo(customer).issuedBy(librarian).issuedOn(now)
 				.toBeReturnedOn(nowPlus3Days).build();
+		when(bookIssueRepository.save(bookIssue)).thenReturn(savedTr);
 
-	}
-
-	@DisplayName("Test get all transactions")
-	@Test
-	public void getAllTransactionsTest() {
-		List<Transaction> transactions = Arrays.asList(transaction);
-
-		when(transactionRepository.findAll()).thenReturn(transactions);
-
-		List<Transaction> list = transactionService.getAllTransactions();
-
-		assertEquals(1, list.size());
-	}
-
-	@DisplayName("Test get transaction by id")
-	@Test
-	public void getTransactionByIdTest() {
-		when(transactionRepository.findById(1l)).thenReturn(Optional.of(transaction));
-
-		Transaction tr = transactionService.getTransactionById(1l);
-
-		assertThat(tr.getBook().getTitle()).isEqualTo(book.getTitle());
-	}
-
-	@DisplayName("Test delete Transaction by id")
-	@Test
-	public void deleteTransactionByIdTest() {
-
-		when(transactionRepository.findById(transaction.getId())).thenReturn(Optional.of(transaction));
-
-		transactionService.deleteTransactionById(transaction.getId());
-		assertEquals(Active.FALSE, transaction.getActive());
-	}
-
-	@DisplayName("Test create transaction")
-	@Test
-	public void transactionCreateTest() {
-		Transaction savedTr = Transaction.builder().id(1).book(book).issuedTo(customer).issuedBy(librarian).issuedOn(now)
-				.toBeReturnedOn(nowPlus3Days).build();
-		when(transactionRepository.save(transaction)).thenReturn(savedTr);
-
-		Transaction tr = transactionService.createTransaction(transaction);
+		BookIssue tr = bookIssueService.createBookIssue(bookIssue);
 		assertThat(tr.getId()).isGreaterThan(0);
 	}
-	
-	@DisplayName("Test to transaction update")
+
+	@DisplayName("Test to bookIssue update")
 	@Test
-	public void updateTransactionTest() {
-		transactionRepository.save(transaction);
-		TransactionStatus status = TransactionStatus.APPROVED;
+	public void updateBookIssueTest() {
+		bookIssueRepository.save(bookIssue);
+		BookIssueStatus status = BookIssueStatus.APPROVED;
 
-		when(transactionRepository.findById(transaction.getId())).thenReturn(Optional.of(transaction));
-		transaction.setStatus(status);
+		when(bookIssueRepository.findById(bookIssue.getId())).thenReturn(Optional.of(bookIssue));
+		bookIssue.setStatus(status);
 
-		Transaction updatedTransaction = transactionService.updateTransaction(transaction.getId(), transaction);
-		assertThat(updatedTransaction.getStatus()).isEqualTo(status);
-
+		BookIssue updatedBookIssue = bookIssueService.updateBookIssue(bookIssue);
+		assertThat(updatedBookIssue.getStatus()).isEqualTo(status);
 	}
 }
