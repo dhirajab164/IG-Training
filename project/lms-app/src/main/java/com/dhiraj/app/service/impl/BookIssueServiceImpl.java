@@ -56,7 +56,7 @@ public class BookIssueServiceImpl implements IBookIssueService {
 
 	@Override
 	public List<BookIssue> getAllBookIssuesByStatus(BookIssueStatus status) {
-		List<BookIssue> bookIssues = bookIssueRepository.findBookIssueByBookIssueStatus(status);
+		List<BookIssue> bookIssues = bookIssueRepository.findByStatus(status);
 		if (!bookIssues.isEmpty()) {
 			return bookIssues;
 		} else {
