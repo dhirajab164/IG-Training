@@ -2,7 +2,6 @@ package com.dhiraj.app.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.dhiraj.app.entity.Book;
 import com.dhiraj.app.entity.User;
@@ -20,6 +20,7 @@ import com.dhiraj.app.entity.enums.Active;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@ActiveProfiles("test")
 public class BookRepositoryTest {
 
 	@Autowired
@@ -47,16 +48,18 @@ public class BookRepositoryTest {
 	@DisplayName("Test for get all books")
 	@Test
 	public void findAllTest() {
+
 		List<Book> books = bookRepository.findAll();
 
 		assertThat(books).isNotNull();
-		assertThat(books.size()).isEqualTo(1);
+		assertThat(books.size()).isEqualTo(9);
 	}
 
 	@DisplayName("Test for book by title")
 	@Test
 	public void findBookByTitleTest() {
 		List<Book> bookByTitle = bookRepository.findBookByTitle("Title 1");
+		assertThat(bookByTitle.size()).isEqualTo(1);
 		for (Book book : bookByTitle) {
 			assertThat(book.getTitle()).isEqualTo("Title 1");
 		}
