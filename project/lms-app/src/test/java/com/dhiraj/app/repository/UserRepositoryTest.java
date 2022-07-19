@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.dhiraj.app.entity.User;
 import com.dhiraj.app.entity.enums.Active;
@@ -19,6 +20,7 @@ import com.dhiraj.app.entity.enums.UserType;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
 public class UserRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
@@ -46,7 +48,7 @@ public class UserRepositoryTest {
 		List<User> users = userRepository.findAll();
 
 		assertThat(users).isNotNull();
-		assertThat(users.size()).isEqualTo(1);
+		assertThat(users.size()).isEqualTo(11);
 	}
 
 	@DisplayName("Test for user by type")
